@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-verde-estudio: #0A2F1D;
+  --color-bordo-sangue: #4A0E17;
+  --color-ouro-velho: #D49B35;
+  --color-papel-kraft: #F4EBE1;
+  
+  /* Nossas novas fontes estilo Bar Brasileiro / Lambe-Lambe */
+  --font-vintage: "Bebas Neue", sans-serif;
+  --font-vernacular: "Lilita One", sans-serif;
+  --font-manchete: "Anton", sans-serif;
+}
+
+@utility bg-pintas-onca {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='%23000000' fill-opacity='0.12'%3E%3Cpath d='M25,30 C20,25 12,32 15,42 C18,50 28,48 32,40 C35,32 30,35 25,30 Z'/%3E%3Cpath d='M40,22 C42,15 32,10 26,16 C20,22 28,28 40,22 Z'/%3E%3Cpath d='M95,75 C85,70 80,80 83,90 C86,98 98,96 100,88 C102,82 98,80 95,75 Z'/%3E%3Cpath d='M115,30 C110,22 98,26 100,36 C102,44 115,42 118,34 C120,28 115,32 115,30 Z'/%3E%3Cpath d='M130,105 C125,96 112,100 114,110 C116,118 130,116 132,108 C134,102 130,106 130,105 Z'/%3E%3Cpath d='M35,110 C25,105 20,116 23,124 C26,132 38,128 40,120 C42,114 38,112 35,110 Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+body {
+  background-color: var(--color-verde-estudio);
+  color: var(--color-papel-kraft);
+}
