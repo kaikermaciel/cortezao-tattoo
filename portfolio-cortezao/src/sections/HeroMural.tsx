@@ -113,19 +113,19 @@ export default function HeroMural({ onOpenGallery, onOpenAbout, onOpenBooking }:
           </p>
         </motion.div>
 
-        {/* ⚡ STICKER 1: Preenchendo a fresta do meio */}
+        {/* ⚡ STICKER 1: Ajustado para cores nativas no Mobile */}
         <motion.div
           variants={itemVariants}
           className="bg-white p-2 border-4 border-white rounded-xl shadow-2xl col-span-1 rotate-6 md:rotate-4 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer group flex items-center justify-center relative overflow-hidden"
         >
           <img 
             src="/tattoos/garantido.webp" 
-            className="w-full h-full object-cover rounded-lg filter grayscale contrast-120 group-hover:grayscale-0 transition-all duration-300" 
+            className="w-full h-full object-cover rounded-lg grayscale-0 contrast-100 md:grayscale md:contrast-120 md:group-hover:grayscale-0 transition-all duration-300" 
             alt="Sticker Boi" 
           />
         </motion.div>
 
-        {/* 🚀 PÔSTER 5: MANIFESTO / SOBRE MIM (AGORA BLINDADO PARA MOBILE) */}
+        {/* 🚀 PÔSTER 5: MANIFESTO / SOBRE MIM */}
         <motion.div 
           variants={itemVariants}
           onClick={onOpenAbout}
@@ -142,10 +142,14 @@ export default function HeroMural({ onOpenGallery, onOpenAbout, onOpenBooking }:
           </span>
         </motion.div>
 
-        {/* Pôster 6: Agenda Aberta */}
-        <motion.div 
+        {/* Pôster 6: Agenda Aberta - Agora com tag <button> garantida */}
+        <motion.button 
           variants={itemVariants}
-          className="bg-bordo-sangue text-papel-kraft p-5 flex flex-col justify-between shadow-2xl col-span-1 rotate-4 md:-rotate-4 hover:rotate-0 hover:scale-105 transition-all duration-300 ease-out cursor-pointer group"
+          onClick={(e) => {
+            e.preventDefault(); // Garante que não propague eventos estranhos
+            onOpenBooking();    // Chama a função direto
+          }}
+          className="bg-bordo-sangue text-papel-kraft p-5 flex flex-col justify-between shadow-2xl col-span-1 rotate-4 md:-rotate-4 hover:rotate-0 hover:scale-105 transition-all duration-300 ease-out cursor-pointer group w-full h-full text-left"
         >
           <div className="flex justify-between items-center">
             <div className="w-2.5 h-2.5 rounded-full bg-ouro-velho animate-ping" />
@@ -154,16 +158,16 @@ export default function HeroMural({ onOpenGallery, onOpenAbout, onOpenBooking }:
           <span className="font-manchete text-xl md:text-3xl uppercase tracking-tight leading-none mt-4 group-hover:text-ouro-velho transition-colors">
             Agenda<br/>Aberta
           </span>
-        </motion.div>
+        </motion.button>
 
-        {/* ⚡ STICKER 2: Preenchendo a fresta inferior direita */}
+        {/* ⚡ STICKER 2: Ajustado para cores nativas no Mobile */}
         <motion.div
           variants={itemVariants}
           className="bg-white p-2 border-4 border-white rounded-2xl shadow-2xl col-span-1 -rotate-6 md:-rotate-8 hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer group flex items-center justify-center relative overflow-hidden"
         >
           <img 
             src="/tattoos/gato fofo.webp" 
-            className="w-full h-full object-cover rounded-xl filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-300" 
+            className="w-full h-full object-cover rounded-xl grayscale-0 contrast-100 md:grayscale md:contrast-125 md:group-hover:grayscale-0 transition-all duration-300" 
             alt="Sticker Gato" 
           />
         </motion.div>
