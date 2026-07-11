@@ -2,7 +2,8 @@ import { useState } from 'react';
 import HeroMural from './sections/HeroMural';
 import Galeria from './sections/Galeria';
 import SobreModal from './components/SobreModal';
-import AgendamentoModal from './components/AgendamentoModal'; // Novo componente
+import AgendamentoModal from './components/AgendamentoModal'; 
+import { Analytics } from "@vercel/analytics/next"
 
 function App() {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
