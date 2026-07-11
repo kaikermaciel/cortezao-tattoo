@@ -17,7 +17,7 @@ export const mockTattoos: Tattoo[] = [
   { 
     id: 2, 
     titulo: "Lírio e Fineline", 
-    categoria: "Botânico", 
+    categoria: "Fine Line", 
     disponivel: false, 
     imagem: "/tattoos/lirio fineline.webp" 
   },
@@ -51,7 +51,7 @@ export const mockTattoos: Tattoo[] = [
   },
   {
     id: 7,
-    titulo:"blackwork flor no ombro",
+    titulo:"Blackwork flor no ombro",
     categoria:"Blackwork",
     disponivel:true,
     imagem:"/tattoos/blackwork flor ombro.webp"
@@ -87,14 +87,14 @@ export const mockTattoos: Tattoo[] = [
   {
     id: 12,
     titulo: "Coelho Minimalista",
-    categoria: "Fine Line",
+    categoria: "Blackwork",
     disponivel: true,
     imagem: "/tattoos/coelho.webp"
   },
   {
     id: 13,
     titulo: "Coração e Lírios nas Costas",
-    categoria: "Botânico",
+    categoria: "Blackwork",
     disponivel: false,
     imagem: "/tattoos/coracao lirios costa.webp"
   },
@@ -122,7 +122,7 @@ export const mockTattoos: Tattoo[] = [
   {
     id: 17,
     titulo: "Orquídea na Cintura",
-    categoria: "Fine Line",
+    categoria: "Botânico",
     disponivel: false,
     imagem: "/tattoos/flor cintura.webp"
   },
