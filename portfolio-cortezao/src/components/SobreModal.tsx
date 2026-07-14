@@ -55,10 +55,16 @@ export default function SobreModal({ isOpen, onClose }: SobreModalProps) {
               {/* Texto Manifesto com o destaque do Norte e Cultura Popular */}
               <div className="font-serif italic text-base md:text-lg text-zinc-800 leading-relaxed space-y-5">
                 <p>
-                  <b>Nicole Cortezao</b>, vulgo <b>@cortezao</b>, traz na pele e na agulha o peso e a herança visceral do <b>Norte do Brasil</b>. Sou uma caboquinha de uma região onde a identidade ferve, transforma a ancestralidade e identidade.
+                    Olá!
                 </p>
                 <p>
-                  Especialista em <b>Blackwork</b> e no estilo <b>Old School</b>, meu trabalho é um manifesto vivo de valorização da nossa terra. Da força mística das lendas amazônicas ao pulsar das festas do meu boi do povo boi do povão, celebro a riqueza da cultura popular e honro a raiz do povo latino.
+                  <b>Me chamo Nicole Cortezão</b>, mais conhecida como <b>Cortezão</b>. Sou do norte do Brasil, coração da Amazônia: Manaus.
+                </p>
+                <p>
+                  Sempre fui ligada à arte, desde pequena fui movida pela vontade de criar, desenhar e me expressar, independentemente do tipo, mas foi na tatuagem o lugar onde realmente me encontrei.
+                </p>
+                <p>
+                    Apreciso bastante artes em <b>Blackwork, floral, minimalistas e Old School</b>. Acredito que cada tatuagem deve refletir quem a carrega, por isso gosto de conversar, conhecer a história de cada cliente e construir artes autorais que façam sentido para aquela pessoa. Para mim, o processo criativo começa muitooo antes de ir para pele!
                 </p>
               </div>
             </div>

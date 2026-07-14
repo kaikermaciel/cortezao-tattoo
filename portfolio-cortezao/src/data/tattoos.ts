@@ -86,7 +86,7 @@ export const mockTattoos: Tattoo[] = [
   },
   {
     id: 12,
-    titulo: "Coelho Minimalista",
+    titulo: "Coelho",
     categoria: "Blackwork",
     disponivel: true,
     imagem: "/tattoos/coelho.webp"
@@ -156,7 +156,7 @@ export const mockTattoos: Tattoo[] = [
   },
   {
     id: 22,
-    titulo: "Minotauro Sombrio",
+    titulo: "Iansã",
     categoria: "Blackwork",
     disponivel: true,
     imagem: "/tattoos/minotauro.webp"
