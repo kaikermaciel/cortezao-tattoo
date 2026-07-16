@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { mockTattoos, type Tattoo } from '../data/tattoos';
+import { client, urlFor } from '../sanityClient'; // ⚡ Conexão com o Sanity
 
 type FiltroAtActive = 'Todos' | 'Blackwork' | 'Old School' | 'Folclore' | 'Fine Line' | 'Botânico' | 'Disponíveis ☀️';
+
+// 📋 Nova interface adaptada para os dados que vem do Sanity
+interface TattooCMS {
+  id: string;
+  titulo: string;
+  categoria: 'Blackwork' | 'Old School' | 'Folclore' | 'Fine Line' | 'Botânico';
+  disponivel: boolean;
+  imagem: any; // O Sanity envia um objeto complexo de imagem
+}
 
 interface GaleriaProps {
   isOpen: boolean;
@@ -11,13 +20,15 @@ interface GaleriaProps {
 
 export default function Galeria({ isOpen, onClose }: GaleriaProps) {
   const [filtro, setFiltro] = useState<FiltroAtActive>('Todos');
+  
+  // 🔄 Estados para gerenciar os dados do banco de dados
+  const [tattoos, setTattoos] = useState<TattooCMS[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // 🕹️ LÓGICA DO ESC E DO SCROLL
   useEffect(() => {
     const tratarEsc = (evento: KeyboardEvent) => {
-      if (evento.key === 'Escape') {
-        onClose();
-      }
+      if (evento.key === 'Escape') onClose();
     };
 
     if (isOpen) {
@@ -33,7 +44,34 @@ export default function Galeria({ isOpen, onClose }: GaleriaProps) {
     };
   }, [isOpen, onClose]);
 
-  const tattoosFiltradas = mockTattoos.filter((tattoo) => {
+  // 📡 BUSCA OS DADOS NO SANITY SEMPRE QUE A GALERIA FOR ABERTA
+  useEffect(() => {
+    if (isOpen) {
+      setLoading(true);
+      
+      // Query GROQ do Sanity: Busca todos os documentos do tipo 'tattoo' e formata o ID
+      const query = `*[_type == "tattoo"] {
+        "id": _id,
+        titulo,
+        categoria,
+        disponivel,
+        imagem
+      }`;
+
+      client.fetch(query)
+        .then((data) => {
+          setTattoos(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar dados do Sanity:", error);
+          setLoading(false);
+        });
+    }
+  }, [isOpen]);
+
+  // Filtra as tattoos vindas do banco de dados do CMS
+  const tattoosFiltradas = tattoos.filter((tattoo) => {
     if (filtro === 'Todos') return true;
     if (filtro === 'Disponíveis ☀️') return tattoo.disponivel;
     return tattoo.categoria === filtro;
@@ -52,7 +90,7 @@ export default function Galeria({ isOpen, onClose }: GaleriaProps) {
           className="fixed inset-0 bg-verde-estudio z-50 overflow-y-auto py-16 px-4 md:px-8 bg-pintas-onca"
         >
           
-          {/* 🤫 BOTÃO DE FECHAR DISCRETO E FIXO */}
+          {/* BOTÃO DE FECHAR FIXO */}
           <button
             onClick={onClose}
             className="fixed top-4 right-4 md:top-8 md:right-8 z-50 px-3 py-1.5 bg-verde-estudio/80 backdrop-blur-md border border-papel-kraft/10 text-papel-kraft/60 hover:text-ouro-velho hover:border-ouro-velho/40 font-mono text-xs uppercase tracking-widest transition-all cursor-pointer shadow-md"
@@ -60,7 +98,7 @@ export default function Galeria({ isOpen, onClose }: GaleriaProps) {
             ✕ Fechar <span className="hidden md:inline opacity-40 ml-1">(ESC)</span>
           </button>
 
-          {/* Cabeçalho do Modal */}
+          {/* Cabeçalho */}
           <div className="max-w-6xl mx-auto mb-12 text-center md:text-left flex flex-col lg:flex-row lg:items-end justify-between gap-6 relative pr-12">
             <div>
               <span className="text-ouro-velho font-vintage text-xl tracking-wider block mb-1">PORTFÓLIO COMPLETO</span>
@@ -87,49 +125,56 @@ export default function Galeria({ isOpen, onClose }: GaleriaProps) {
             </div>
           </div>
 
-          {/* Grid Estilo Masonry */}
-          <motion.div layout className="max-w-6xl mx-auto columns-1 sm:columns-2 md:columns-3 gap-6 space-y-6">
-            <AnimatePresence mode="popLayout">
-              {tattoosFiltradas.map((tattoo: Tattoo) => (
-                <motion.div
-                  layout
-                  key={tattoo.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                  className="break-inside-avoid bg-bordo-sangue/10 border border-bordo-sangue/30 group relative overflow-hidden shadow-xl mb-6 inline-block w-full"
-                >
-                  <div className="w-full bg-zinc-900 relative overflow-hidden">
-                    {/* 🎨 IMAGEM BLINDADA: Colorida no Mobile, P&B com hover apenas no Desktop */}
-                    <img 
-                      src={tattoo.imagem} 
-                      alt={tattoo.titulo}
-                      className="w-full h-auto object-cover grayscale-0 contrast-100 md:grayscale md:contrast-115 md:group-hover:grayscale-0 group-hover:scale-102 transition-all duration-500 ease-out"
-                    />
-                    
-                    {/* 🎭 OVERLAY RESPONSIVO: Escondido no Mobile (hidden), ativo apenas no Desktop (md:block) */}
-                    <div className="hidden md:block absolute inset-0 bg-bordo-sangue/10 mix-blend-color group-hover:opacity-0 transition-opacity duration-300" />
-                    
-                    {tattoo.disponivel && (
-                      <span className="absolute top-3 right-3 bg-ouro-velho text-verde-estudio font-manchete text-sm px-3 py-1 uppercase tracking-wider shadow-md transform rotate-3">
-                        Disponível ☀️
-                      </span>
-                    )}
-                  </div>
+          {/* 🌀 ESTADO DE LOADING ESTRUTURADO */}
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="w-10 h-10 border-4 border-ouro-velho border-t-transparent rounded-full animate-spin mb-4" />
+              <span className="font-mono text-xs text-ouro-velho uppercase tracking-widest">Carregando trabalhos...</span>
+            </div>
+          ) : (
+            /* Grid Estilo Masonry */
+            <motion.div layout className="max-w-6xl mx-auto columns-1 sm:columns-2 md:columns-3 gap-6 space-y-6">
+              <AnimatePresence mode="popLayout">
+                {tattoosFiltradas.map((tattoo: TattooCMS) => (
+                  <motion.div
+                    layout
+                    key={tattoo.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3 }}
+                    className="break-inside-avoid bg-bordo-sangue/10 border border-bordo-sangue/30 group relative overflow-hidden shadow-xl mb-6 inline-block w-full"
+                  >
+                    <div className="w-full bg-zinc-900 relative overflow-hidden">
+                      {/* 🎨 IMAGEM GERADA VIA API DO SANITY COM REDIMENSIONAMENTO INTELIGENTE */}
+                      <img 
+                        src={urlFor(tattoo.imagem).width(600).url()} 
+                        alt={tattoo.titulo}
+                        className="w-full h-auto object-cover grayscale-0 contrast-100 md:grayscale md:contrast-115 md:group-hover:grayscale-0 group-hover:scale-102 transition-all duration-500 ease-out"
+                      />
+                      
+                      <div className="hidden md:block absolute inset-0 bg-bordo-sangue/10 mix-blend-color group-hover:opacity-0 transition-opacity duration-300" />
+                      
+                      {tattoo.disponivel && (
+                        <span className="absolute top-3 right-3 bg-ouro-velho text-verde-estudio font-manchete text-sm px-3 py-1 uppercase tracking-wider shadow-md transform rotate-3">
+                          Disponível ☀️
+                        </span>
+                      )}
+                    </div>
 
-                  <div className="p-4 flex items-center justify-between bg-bordo-sangue/25 border-t border-bordo-sangue/20">
-                    <h3 className="font-manchete text-xl text-papel-kraft uppercase tracking-tight group-hover:text-ouro-velho transition-colors">
-                      {tattoo.titulo}
-                    </h3>
-                    <span className="font-mono text-xs text-ouro-velho bg-verde-estudio/50 px-2 py-1 uppercase rounded-sm">
-                      {tattoo.categoria}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+                    <div className="p-4 flex items-center justify-between bg-bordo-sangue/25 border-t border-bordo-sangue/20">
+                      <h3 className="font-manchete text-xl text-papel-kraft uppercase tracking-tight group-hover:text-ouro-velho transition-colors">
+                        {tattoo.titulo}
+                      </h3>
+                      <span className="font-mono text-xs text-ouro-velho bg-verde-estudio/50 px-2 py-1 uppercase rounded-sm">
+                        {tattoo.categoria}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
