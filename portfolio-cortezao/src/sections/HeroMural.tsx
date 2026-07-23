@@ -4,9 +4,10 @@ interface HeroMuralProps {
   onOpenGallery: () => void;
   onOpenAbout: () => void;
   onOpenBooking: () => void;
+  onTriggerEasterEgg: () => void;
 }
 
-export default function HeroMural({ onOpenGallery, onOpenAbout, onOpenBooking }: HeroMuralProps) {
+export default function HeroMural({ onOpenGallery, onOpenAbout, onOpenBooking, onTriggerEasterEgg }: HeroMuralProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -48,7 +49,13 @@ export default function HeroMural({ onOpenGallery, onOpenAbout, onOpenBooking }:
             initial={{ scale: 0, x: 30 }}
             animate={{ scale: 1, x: 0 }}
             transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+            onClick={(e) => {
+              if (e.detail === 3) { // ⚡ Detecta 3 cliques rápidos
+                onTriggerEasterEgg();
+              }
+            }}
             className="absolute -bottom-4 -right-12 md:-bottom-6 md:-right-28 w-20 h-20 md:w-40 md:h-40 z-30 drop-shadow-[0_8px_8px_rgba(0,0,0,0.4)] transform scale-x-[-1] select-none"
+
           >
             <img src="/logo-cortezao.png" alt="Cortezao Logo" className="w-full h-full object-contain" />
           </motion.div>
