@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface EasterEggModalProps {
@@ -7,8 +7,14 @@ interface EasterEggModalProps {
 }
 
 export default function EasterEggModal({ isOpen, onClose }: EasterEggModalProps) {
-  // Escuta a tecla ESC para fechar o vídeo
+  const [hasError, setHasError] = useState(false);
+
+  // Zera o estado de erro e escuta a tecla ESC
   useEffect(() => {
+    if (isOpen) {
+      setHasError(false);
+    }
+
     const tratarEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -39,7 +45,7 @@ export default function EasterEggModal({ isOpen, onClose }: EasterEggModalProps)
             {/* Botão de Fechar */}
             <button 
               onClick={onClose}
-              className="absolute top-3 right-4 text-papel-kraft/70 hover:text-ouro-velho font-mono text-xs cursor-pointer z-20 bg-black/60 px-3 py-1 rounded-full border border-papel-kraft/20"
+              className="absolute top-3 right-4 text-papel-kraft/70 hover:text-ouro-velho font-mono text-xs cursor-pointer z-20 bg-black/60 px-3 py-1 rounded-full border border-papel-kraft/20 transition-colors"
             >
               ✕ ESC
             </button>
@@ -48,16 +54,34 @@ export default function EasterEggModal({ isOpen, onClose }: EasterEggModalProps)
               ⚡ SEGREDOS DO ESTÚDIO ⚡
             </span>
 
-            {/* Container do Vídeo */}
-            <div className="w-full rounded-2xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-bordo-sangue/30 shadow-inner">
-              <video 
-                src="/patixa.mp4" 
-                autoPlay 
-                controls 
-                className="w-full h-full object-contain"
-              >
-                Seu navegador não suporta vídeos HTML5.
-              </video>
+            {/* Container do Vídeo com Tratamento de Erro */}
+            <div className="w-full rounded-2xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-bordo-sangue/30 shadow-inner relative">
+              
+              {hasError ? (
+                /* 🎨 TELA DE ERRO CUSTOMIZADA (Se o vídeo falhar) */
+                <div className="flex flex-col items-center justify-center p-6 text-center">
+                  <span className="text-4xl mb-2">🎞️</span>
+                  <p className="font-manchete text-xl text-papel-kraft uppercase">
+                    Vídeo indisponível
+                  </p>
+                  <p className="font-mono text-xs text-papel-kraft/50 mt-1 max-w-xs">
+                    Certifique-se de que o arquivo <code className="text-ouro-velho">easteregg.mp4</code> está salvo na pasta <code className="text-ouro-velho">public/</code>.
+                  </p>
+                </div>
+              ) : (
+                /* 🎬 REPRODUTOR DE VÍDEO CORRIGIDO */
+                <video 
+                  autoPlay 
+                  controls 
+                  playsInline
+                  onError={() => setHasError(true)}
+                  className="w-full h-full object-contain"
+                >
+                  <source src="/patixa.mp4" type="video/mp4" />
+                  Seu navegador não suporta a execução deste vídeo.
+                </video>
+              )}
+
             </div>
           </motion.div>
         </div>
