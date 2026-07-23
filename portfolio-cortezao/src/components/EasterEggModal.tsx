@@ -95,7 +95,7 @@ export default function EasterEggModal({ isOpen, onClose }: EasterEggModalProps)
                   onError={() => setHasError(true)}
                   className="w-full h-full object-contain"
                 >
-                  <source src="/easteregg.mp4" type="video/mp4" />
+                  <source src="/patixa.mp4" type="video/mp4" />
                   Seu navegador não suporta a execução deste vídeo.
                 </video>
               )}
