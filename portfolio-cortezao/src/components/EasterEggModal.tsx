@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface EasterEggModalProps {
@@ -8,11 +8,28 @@ interface EasterEggModalProps {
 
 export default function EasterEggModal({ isOpen, onClose }: EasterEggModalProps) {
   const [hasError, setHasError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Zera o estado de erro e escuta a tecla ESC
   useEffect(() => {
     if (isOpen) {
       setHasError(false);
+
+      // 📱 Lógica de reprodução para Mobile (trata o bloqueio de áudio do iOS/Android)
+      setTimeout(() => {
+        if (videoRef.current) {
+          const playPromise = videoRef.current.play();
+
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {
+              // Se o celular bloquear o autoplay com som, roda mutado para não travar o vídeo
+              if (videoRef.current) {
+                videoRef.current.muted = true;
+                videoRef.current.play().catch(() => setHasError(true));
+              }
+            });
+          }
+        }
+      }, 300); // Pequeno delay para aguardar a animação do modal abrir
     }
 
     const tratarEsc = (e: KeyboardEvent) => {
@@ -54,11 +71,11 @@ export default function EasterEggModal({ isOpen, onClose }: EasterEggModalProps)
               ⚡ SEGREDOS DO ESTÚDIO ⚡
             </span>
 
-            {/* Container do Vídeo com Tratamento de Erro */}
+            {/* Container do Vídeo */}
             <div className="w-full rounded-2xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-bordo-sangue/30 shadow-inner relative">
               
               {hasError ? (
-                /* 🎨 TELA DE ERRO CUSTOMIZADA (Se o vídeo falhar) */
+                /* 🎨 Tela de Erro (Garantia) */
                 <div className="flex flex-col items-center justify-center p-6 text-center">
                   <span className="text-4xl mb-2">🎞️</span>
                   <p className="font-manchete text-xl text-papel-kraft uppercase">
@@ -69,15 +86,16 @@ export default function EasterEggModal({ isOpen, onClose }: EasterEggModalProps)
                   </p>
                 </div>
               ) : (
-                /* 🎬 REPRODUTOR DE VÍDEO CORRIGIDO */
+                /* 🎬 Reprodutor de Vídeo Otimizado para Mobile */
                 <video 
-                  autoPlay 
+                  ref={videoRef}
                   controls 
                   playsInline
+                  preload="auto"
                   onError={() => setHasError(true)}
                   className="w-full h-full object-contain"
                 >
-                  <source src="/patixa.mp4" type="video/mp4" />
+                  <source src="/easteregg.mp4" type="video/mp4" />
                   Seu navegador não suporta a execução deste vídeo.
                 </video>
               )}
